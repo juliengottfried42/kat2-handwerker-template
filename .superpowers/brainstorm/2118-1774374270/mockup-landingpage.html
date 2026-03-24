@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kat2 Template — Mockup</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --warm-50: #fdf8f0;
+    --warm-100: #f5ead6;
+    --warm-200: #e8d5b0;
+    --warm-300: #d4b886;
+    --warm-400: #c49a5c;
+    --warm-500: #a67c3c;
+    --warm-600: #8b6330;
+    --warm-700: #6b4a24;
+    --warm-800: #4a3218;
+    --warm-900: #2d1e0e;
+    --green-600: #4a7c59;
+    --green-700: #3a6347;
+    --text: #2d1e0e;
+    --text-light: #6b4a24;
+    --white: #ffffff;
+    --shadow: 0 4px 24px rgba(45, 30, 14, 0.08);
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    color: var(--text);
+    background: var(--warm-50);
+    line-height: 1.6;
+  }
+
+  /* NAV */
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 48px;
+    background: var(--white);
+    box-shadow: 0 1px 8px rgba(45,30,14,0.06);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    color: var(--warm-700);
+  }
+  .nav-links { display: flex; gap: 28px; list-style: none; }
+  .nav-links a {
+    text-decoration: none;
+    color: var(--text-light);
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--warm-500); }
+  .nav-cta {
+    background: var(--green-600);
+    color: var(--white) !important;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-weight: 600 !important;
+  }
+  .nav-cta:hover { background: var(--green-700); }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    min-height: 85vh;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, var(--warm-800) 0%, var(--warm-700) 100%);
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="80" r="40" fill="rgba(255,255,255,0.03)"/><circle cx="80" cy="30" r="50" fill="rgba(255,255,255,0.02)"/></svg>');
+    background-size: cover;
+  }
+  .hero-content {
+    position: relative;
+    padding: 80px 48px;
+    max-width: 650px;
+  }
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 56px;
+    color: var(--warm-100);
+    line-height: 1.15;
+    margin-bottom: 20px;
+  }
+  .hero p {
+    font-size: 18px;
+    color: var(--warm-200);
+    margin-bottom: 36px;
+    max-width: 500px;
+  }
+  .btn-primary {
+    display: inline-block;
+    background: var(--green-600);
+    color: var(--white);
+    padding: 16px 36px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(74,124,89,0.3);
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.1);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    color: var(--warm-200);
+    margin-bottom: 24px;
+    backdrop-filter: blur(4px);
+  }
+
+  /* SECTIONS */
+  section { padding: 80px 48px; }
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 36px;
+    text-align: center;
+    margin-bottom: 12px;
+    color: var(--warm-800);
+  }
+  .section-sub {
+    text-align: center;
+    color: var(--text-light);
+    margin-bottom: 48px;
+    font-size: 16px;
+  }
+
+  /* LEISTUNGEN */
+  .services { background: var(--white); }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  .service-card {
+    background: var(--warm-50);
+    border: 1px solid var(--warm-100);
+    border-radius: 16px;
+    padding: 32px 24px;
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .service-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow);
+  }
+  .service-icon {
+    width: 56px;
+    height: 56px;
+    background: var(--warm-200);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    font-size: 24px;
+  }
+  .service-card h3 {
+    font-size: 17px;
+    margin-bottom: 8px;
+    color: var(--warm-800);
+  }
+  .service-card p {
+    font-size: 13px;
+    color: var(--text-light);
+    margin-bottom: 12px;
+  }
+  .service-price {
+    font-weight: 600;
+    color: var(--green-600);
+    font-size: 15px;
+  }
+
+  /* SO FUNKTIONIERT'S */
+  .how-it-works { background: var(--warm-50); }
+  .steps {
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .steps::before {
+    content: '';
+    position: absolute;
+    top: 32px;
+    left: 20%;
+    right: 20%;
+    height: 2px;
+    background: var(--warm-200);
+  }
+  .step {
+    text-align: center;
+    flex: 1;
+    position: relative;
+  }
+  .step-number {
+    width: 64px;
+    height: 64px;
+    background: var(--green-600);
+    color: var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 auto 16px;
+    position: relative;
+    z-index: 1;
+  }
+  .step h3 {
+    font-size: 16px;
+    margin-bottom: 8px;
+    color: var(--warm-800);
+  }
+  .step p {
+    font-size: 13px;
+    color: var(--text-light);
+  }
+
+  /* GALERIE */
+  .gallery { background: var(--white); }
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  .gallery-item {
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    aspect-ratio: 4/3;
+    background: var(--warm-200);
+    cursor: pointer;
+  }
+  .gallery-item .slider-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 3px;
+    background: var(--white);
+    z-index: 2;
+  }
+  .gallery-item .slider-handle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 36px;
+    height: 36px;
+    background: var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    z-index: 3;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  .gallery-label {
+    position: absolute;
+    bottom: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--white);
+    background: rgba(0,0,0,0.5);
+    padding: 4px 10px;
+    border-radius: 6px;
+  }
+  .gallery-label.before { left: 12px; }
+  .gallery-label.after { right: 12px; }
+  .gallery-left {
+    position: absolute;
+    inset: 0;
+    width: 50%;
+    background: var(--warm-300);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--warm-600);
+    font-size: 13px;
+  }
+  .gallery-right {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 50%;
+    background: var(--warm-100);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--warm-500);
+    font-size: 13px;
+  }
+
+  /* REVIEWS */
+  .reviews { background: var(--warm-50); }
+  .reviews-header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .stars { color: #f5a623; font-size: 28px; letter-spacing: 4px; }
+  .rating-text { font-size: 14px; color: var(--text-light); margin-top: 4px; }
+  .reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  .review-card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: var(--shadow);
+  }
+  .review-stars { color: #f5a623; font-size: 14px; margin-bottom: 12px; }
+  .review-text {
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 16px;
+    font-style: italic;
+    line-height: 1.7;
+  }
+  .review-author {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-light);
+  }
+
+  /* ÜBER UNS */
+  .about { background: var(--white); }
+  .about-content {
+    display: flex;
+    gap: 48px;
+    max-width: 900px;
+    margin: 0 auto;
+    align-items: center;
+  }
+  .about-photo {
+    width: 280px;
+    height: 340px;
+    background: var(--warm-200);
+    border-radius: 20px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--warm-500);
+    font-size: 14px;
+  }
+  .about-text h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    margin-bottom: 16px;
+    color: var(--warm-800);
+  }
+  .about-text p {
+    color: var(--text-light);
+    font-size: 15px;
+    margin-bottom: 12px;
+  }
+  .about-facts {
+    display: flex;
+    gap: 32px;
+    margin-top: 20px;
+  }
+  .fact {
+    text-align: center;
+  }
+  .fact-number {
+    font-family: 'DM Serif Display', serif;
+    font-size: 32px;
+    color: var(--green-600);
+  }
+  .fact-label {
+    font-size: 12px;
+    color: var(--text-light);
+  }
+
+  /* CTA / KONTAKT */
+  .cta {
+    background: linear-gradient(135deg, var(--warm-700) 0%, var(--green-700) 100%);
+    text-align: center;
+    padding: 80px 48px;
+  }
+  .cta h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 36px;
+    color: var(--warm-100);
+    margin-bottom: 16px;
+  }
+  .cta p {
+    color: var(--warm-200);
+    margin-bottom: 32px;
+    font-size: 16px;
+  }
+  .cta-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.12);
+    color: var(--warm-100);
+    padding: 14px 28px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.15);
+    transition: background 0.2s;
+  }
+  .btn-secondary:hover {
+    background: rgba(255,255,255,0.2);
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--warm-900);
+    color: var(--warm-300);
+    padding: 40px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+  }
+  footer a {
+    color: var(--warm-300);
+    text-decoration: none;
+  }
+  footer a:hover { color: var(--warm-100); }
+  .footer-links { display: flex; gap: 24px; }
+
+  /* WHATSAPP BUTTON */
+  .whatsapp-float {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    width: 60px;
+    height: 60px;
+    background: #25d366;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 28px;
+    box-shadow: 0 4px 16px rgba(37,211,102,0.35);
+    z-index: 999;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  .whatsapp-float:hover { transform: scale(1.1); }
+
+  /* LABEL */
+  .mockup-label {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: var(--warm-800);
+    color: var(--warm-200);
+    text-align: center;
+    padding: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    z-index: 1000;
+    letter-spacing: 1px;
+  }
+</style>
+</head>
+<body>
+
+<div class="mockup-label">MOCKUP — Kat2 Handwerker Template (Beispiel: Maler)</div>
+
+<!-- NAV -->
+<nav style="margin-top: 30px;">
+  <div class="logo">Malermeister Brunner</div>
+  <ul class="nav-links">
+    <li><a href="#leistungen">Leistungen</a></li>
+    <li><a href="#galerie">Arbeiten</a></li>
+    <li><a href="#bewertungen">Bewertungen</a></li>
+    <li><a href="#ueber">Über uns</a></li>
+    <li><a href="#kontakt" class="nav-cta">Jetzt anfragen</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">⭐ 4.9 Sterne auf Google — 47 Bewertungen</div>
+    <h1>Ihr Maler in Zürich und Umgebung</h1>
+    <p>Professionelle Malerarbeiten mit Herzblut. Von der Wohnungsrenovation bis zur Fassadengestaltung — wir sind für Sie da.</p>
+    <a href="#" class="btn-primary">Kostenlose Anfrage starten →</a>
+  </div>
+</section>
+
+<!-- LEISTUNGEN -->
+<section class="services" id="leistungen">
+  <h2 class="section-title">Unsere Leistungen</h2>
+  <p class="section-sub">Qualität, die man sieht — seit über 15 Jahren</p>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-icon">🎨</div>
+      <h3>Innenanstrich</h3>
+      <p>Wände, Decken, Türen und Fensterrahmen — frische Farbe für Ihr Zuhause.</p>
+      <div class="service-price">ab CHF 800</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🏠</div>
+      <h3>Fassadengestaltung</h3>
+      <p>Wetterfeste Anstriche und kreative Fassadengestaltung für einen starken Auftritt.</p>
+      <div class="service-price">ab CHF 3'500</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">✨</div>
+      <h3>Tapezierarbeiten</h3>
+      <p>Von klassisch bis modern — wir tapezieren mit Präzision und Liebe zum Detail.</p>
+      <div class="service-price">ab CHF 600</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🔨</div>
+      <h3>Spachtelarbeiten</h3>
+      <p>Glatte Wände, perfekte Oberflächen — die Basis für jedes schöne Ergebnis.</p>
+      <div class="service-price">ab CHF 500</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🪵</div>
+      <h3>Holzschutz</h3>
+      <p>Lasuren, Lacke und Öle — wir schützen und verschönern Ihre Holzflächen.</p>
+      <div class="service-price">ab CHF 400</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🏢</div>
+      <h3>Gewerbe & Büro</h3>
+      <p>Professionelle Malerarbeiten für Geschäftsräume — termingerecht und sauber.</p>
+      <div class="service-price">auf Anfrage</div>
+    </div>
+  </div>
+</section>
+
+<!-- SO FUNKTIONIERT'S -->
+<section class="how-it-works">
+  <h2 class="section-title">So einfach geht's</h2>
+  <p class="section-sub">In 3 Schritten zu Ihrem Malerauftrag</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-number">1</div>
+      <h3>Anfrage stellen</h3>
+      <p>Erzählen Sie uns in unserem Chat, was Sie brauchen. Fotos helfen bei der Einschätzung.</p>
+    </div>
+    <div class="step">
+      <div class="step-number">2</div>
+      <h3>Offerte erhalten</h3>
+      <p>Wir melden uns innert 24h mit einer unverbindlichen Offerte.</p>
+    </div>
+    <div class="step">
+      <div class="step-number">3</div>
+      <h3>Auftrag erledigt</h3>
+      <p>Wir kommen zum vereinbarten Termin und liefern Qualitätsarbeit.</p>
+    </div>
+  </div>
+</section>
+
+<!-- GALERIE -->
+<section class="gallery" id="galerie">
+  <h2 class="section-title">Unsere Arbeiten</h2>
+  <p class="section-sub">Vorher/Nachher — sehen Sie den Unterschied</p>
+  <div class="gallery-grid">
+    <div class="gallery-item">
+      <div class="gallery-left">Vorher</div>
+      <div class="gallery-right">Nachher</div>
+      <div class="slider-line"></div>
+      <div class="slider-handle">↔</div>
+      <span class="gallery-label before">Vorher</span>
+      <span class="gallery-label after">Nachher</span>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-left">Vorher</div>
+      <div class="gallery-right">Nachher</div>
+      <div class="slider-line"></div>
+      <div class="slider-handle">↔</div>
+      <span class="gallery-label before">Vorher</span>
+      <span class="gallery-label after">Nachher</span>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-left">Vorher</div>
+      <div class="gallery-right">Nachher</div>
+      <div class="slider-line"></div>
+      <div class="slider-handle">↔</div>
+      <span class="gallery-label before">Vorher</span>
+      <span class="gallery-label after">Nachher</span>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="reviews" id="bewertungen">
+  <h2 class="section-title">Was unsere Kunden sagen</h2>
+  <div class="reviews-header">
+    <div class="stars">★★★★★</div>
+    <div class="rating-text">4.9 von 5 — basierend auf 47 Google-Bewertungen</div>
+  </div>
+  <div class="reviews-grid">
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"Herr Brunner und sein Team haben unsere Wohnung wunderschön gestrichen. Pünktlich, sauber und das Ergebnis ist perfekt."</p>
+      <div class="review-author">Sandra M.</div>
+    </div>
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"Sehr kompetente Beratung bei der Farbwahl. Die Fassade sieht aus wie neu. Preis-Leistung top!"</p>
+      <div class="review-author">Thomas K.</div>
+    </div>
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"Zum dritten Mal beauftragt — immer zuverlässig, freundlich und qualitativ einwandfrei. Klare Empfehlung!"</p>
+      <div class="review-author">Maria L.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ÜBER UNS -->
+<section class="about" id="ueber">
+  <div class="about-content">
+    <div class="about-photo">📷 Foto</div>
+    <div class="about-text">
+      <h3>Malermeister mit Leidenschaft</h3>
+      <p>Seit 2008 verschönern wir Zürich — Wohnung für Wohnung, Fassade für Fassade. Als Familienbetrieb stehen wir für persönliche Betreuung und handwerkliche Qualität.</p>
+      <p>Jeder Auftrag ist uns wichtig, egal ob eine einzelne Wand oder ein ganzes Haus.</p>
+      <div class="about-facts">
+        <div class="fact">
+          <div class="fact-number">15+</div>
+          <div class="fact-label">Jahre Erfahrung</div>
+        </div>
+        <div class="fact">
+          <div class="fact-number">800+</div>
+          <div class="fact-label">Projekte</div>
+        </div>
+        <div class="fact">
+          <div class="fact-number">4.9</div>
+          <div class="fact-label">Google Rating</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta" id="kontakt">
+  <h2>Bereit für frische Farbe?</h2>
+  <p>Starten Sie jetzt Ihre kostenlose Anfrage — wir melden uns innert 24 Stunden.</p>
+  <div class="cta-buttons">
+    <a href="#" class="btn-primary">Anfrage starten →</a>
+    <a href="#" class="btn-secondary">📞 076 123 45 67</a>
+    <a href="#" class="btn-secondary">✉️ info@maler-brunner.ch</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>© 2026 Malermeister Brunner — Zürich</div>
+  <div class="footer-links">
+    <a href="#">Impressum</a>
+    <a href="#">Datenschutz</a>
+  </div>
+</footer>
+
+<!-- WHATSAPP -->
+<div class="whatsapp-float" title="WhatsApp">💬</div>
+
+</body>
+</html>
