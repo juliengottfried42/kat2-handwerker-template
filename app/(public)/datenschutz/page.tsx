@@ -40,7 +40,7 @@ export default async function DatenschutzPage() {
               <p>{address}</p>
               <p>Schweiz</p>
               <p className="mt-2">
-                Telefon: <a href={`tel:${phone.replace(/\s/g, "")}`} className="hover:text-warm-800">{phone}</a>
+                Telefon: <a href={`tel:${phone.replace(/[\s\-().]/g, "")}`} className="hover:text-warm-800">{phone}</a>
               </p>
               <p>
                 E-Mail: <a href={`mailto:${email}`} className="hover:text-warm-800">{email}</a>
@@ -116,6 +116,8 @@ export default async function DatenschutzPage() {
               Auftragserfüllung notwendig oder gesetzlich vorgeschrieben. Für den E-Mail-Versand
               verwenden wir den Dienst Resend (Resend Inc., USA), welcher die E-Mails in unserem
               Auftrag versendet. Für die Datenspeicherung nutzen wir Supabase (Supabase Inc., USA).
+              {/* TODO: Verify that Auftragsbearbeitungsverträge (data processing agreements)
+                  with Resend and Supabase are actually in place before publishing. */}
               Mit diesen Dienstleistern bestehen Auftragsbearbeitungsverträge, die ein
               angemessenes Datenschutzniveau sicherstellen.
             </p>
@@ -183,7 +185,7 @@ export default async function DatenschutzPage() {
 
           {/* Last updated */}
           <p className="text-xs text-warm-400 pt-4 border-t border-warm-200">
-            Stand: {new Date().toLocaleDateString("de-CH", { year: "numeric", month: "long" })}
+            Stand: März 2026
           </p>
 
         </div>

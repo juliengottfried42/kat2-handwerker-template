@@ -10,20 +10,23 @@ export async function sendInquiryConfirmation(to: string, data: {
   answers: Record<string, string>;
   preferredDate?: string;
 }) {
-  const html = await render(
-    InquiryConfirmation({
-      name: data.name,
-      answers: data.answers,
-      preferredDate: data.preferredDate,
-    })
-  );
+  const component = InquiryConfirmation({
+    name: data.name,
+    answers: data.answers,
+    preferredDate: data.preferredDate,
+  });
 
-  await resend.emails.send({
-    from: "Anfrage <noreply@gottfriedmedia.ch>",
+  const html = await render(component);
+  const text = await render(component, { plainText: true });
+
+  const { error } = await resend.emails.send({
+    from: `Anfrage <${process.env.FROM_EMAIL ?? "noreply@example.com"}>`,
     to,
     subject: "Ihre Anfrage ist eingegangen",
     html,
+    text,
   });
+  if (error) throw new Error(`Resend error: ${error.message}`);
 }
 
 export async function sendInquiryNotification(data: {
@@ -35,24 +38,28 @@ export async function sendInquiryNotification(data: {
   photos: string[];
   preferredDate?: string;
 }) {
-  const recipientEmail = process.env.RECIPIENT_EMAIL!;
+  const recipientEmail = process.env.RECIPIENT_EMAIL;
+  if (!recipientEmail) throw new Error("RECIPIENT_EMAIL environment variable is not set");
 
-  const html = await render(
-    InquiryNotification({
-      name: data.name,
-      phone: data.phone,
-      email: data.email,
-      message: data.message,
-      answers: data.answers,
-      photos: data.photos,
-      preferredDate: data.preferredDate,
-    })
-  );
+  const component = InquiryNotification({
+    name: data.name,
+    phone: data.phone,
+    email: data.email,
+    message: data.message,
+    answers: data.answers,
+    photos: data.photos,
+    preferredDate: data.preferredDate,
+  });
 
-  await resend.emails.send({
-    from: "Website <noreply@gottfriedmedia.ch>",
+  const html = await render(component);
+  const text = await render(component, { plainText: true });
+
+  const { error } = await resend.emails.send({
+    from: `Website <${process.env.FROM_EMAIL ?? "noreply@example.com"}>`,
     to: recipientEmail,
     subject: `Neue Anfrage von ${data.name}`,
     html,
+    text,
   });
+  if (error) throw new Error(`Resend error: ${error.message}`);
 }

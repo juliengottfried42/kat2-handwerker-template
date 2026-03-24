@@ -22,6 +22,10 @@ interface InquiryNotificationProps {
   preferredDate?: string;
 }
 
+function isSafeUrl(url: string): boolean {
+  try { return new URL(url).protocol === "https:"; } catch { return false; }
+}
+
 export default function InquiryNotification({
   name,
   phone,
@@ -79,8 +83,8 @@ export default function InquiryNotification({
                 <Heading as="h2" style={sectionTitle}>
                   Fotos ({photos.length})
                 </Heading>
-                {photos.map((url, index) => (
-                  <Text key={url} style={photoLinkRow}>
+                {photos.filter(isSafeUrl).map((url, index) => (
+                  <Text key={index} style={photoLinkRow}>
                     <Link href={url} style={photoLink}>
                       Foto {index + 1} ansehen →
                     </Link>

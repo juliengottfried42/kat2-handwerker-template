@@ -43,7 +43,7 @@ export default async function ImpressumPage() {
             </h2>
             <p>
               <span className="text-warm-500">Telefon:</span>{" "}
-              <a href={`tel:${phone.replace(/\s/g, "")}`} className="hover:text-warm-800 transition-colors">
+              <a href={`tel:${phone.replace(/[\s\-().]/g, "")}`} className="hover:text-warm-800 transition-colors">
                 {phone}
               </a>
             </p>
@@ -53,6 +53,17 @@ export default async function ImpressumPage() {
                 {email}
               </a>
             </p>
+          </section>
+
+          {/* Registration */}
+          <section>
+            <h2 className="font-semibold text-warm-800 text-lg mb-3 border-b border-warm-200 pb-2">
+              Registereinträge
+            </h2>
+            {/* TODO: Fill in actual Handelsregister-Nummer before going live */}
+            <p><span className="text-warm-500">Handelsregister-Nummer:</span> CHE-xxx.xxx.xxx</p>
+            {/* TODO: Fill in actual UID/MWST-Nummer before going live */}
+            <p><span className="text-warm-500">UID/MWST-Nummer:</span> CHE-xxx.xxx.xxx MWST</p>
           </section>
 
           {/* Responsible person */}
