@@ -4,6 +4,9 @@ import Link from "next/link";
 export default async function DatenschutzPage() {
   const config = await getSiteConfig();
 
+  // Update this date whenever the privacy policy content changes
+  const POLICY_DATE = "März 2026";
+
   const companyName = config.company_name ?? "Muster Handwerk GmbH";
   const phone = config.phone ?? "+41 XX XXX XX XX";
   const email = config.email ?? "info@example.ch";
@@ -116,10 +119,12 @@ export default async function DatenschutzPage() {
               Auftragserfüllung notwendig oder gesetzlich vorgeschrieben. Für den E-Mail-Versand
               verwenden wir den Dienst Resend (Resend Inc., USA), welcher die E-Mails in unserem
               Auftrag versendet. Für die Datenspeicherung nutzen wir Supabase (Supabase Inc., USA).
-              {/* TODO: Verify that Auftragsbearbeitungsverträge (data processing agreements)
-                  with Resend and Supabase are actually in place before publishing. */}
-              Mit diesen Dienstleistern bestehen Auftragsbearbeitungsverträge, die ein
-              angemessenes Datenschutzniveau sicherstellen.
+              {/* TODO: Once Auftragsbearbeitungsverträge (data processing agreements) with
+                  Resend and Supabase are confirmed, replace the sentence below with:
+                  "Mit diesen Dienstleistern bestehen Auftragsbearbeitungsverträge, die ein
+                  angemessenes Datenschutzniveau sicherstellen." */}
+              Wir stellen sicher, dass diese Dienstleister ein angemessenes Datenschutzniveau
+              gewährleisten.
             </p>
           </section>
 
@@ -185,7 +190,7 @@ export default async function DatenschutzPage() {
 
           {/* Last updated */}
           <p className="text-xs text-warm-400 pt-4 border-t border-warm-200">
-            Stand: März 2026
+            Stand: {POLICY_DATE}
           </p>
 
         </div>
