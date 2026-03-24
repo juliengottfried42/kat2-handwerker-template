@@ -1,16 +1,18 @@
 import type { Metadata } from "next";
-import { DM_Serif_Display, Inter } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const serif = DM_Serif_Display({
+const serif = localFont({
+  src: "../public/fonts/dm-serif-display-latin.woff2",
   weight: "400",
-  subsets: ["latin"],
   variable: "--font-serif",
+  display: "swap",
 });
 
-const sans = Inter({
-  subsets: ["latin"],
+const sans = localFont({
+  src: "../public/fonts/inter-latin.woff2",
   variable: "--font-sans",
+  display: "swap",
 });
 
 export const metadata: Metadata = {

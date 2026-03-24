@@ -1,4 +1,11 @@
-import { supabase, supabaseAdmin } from "./supabase";
+import { supabase, supabaseAdmin, isSupabaseConfigured } from "./supabase";
+import {
+  fallbackConfig,
+  fallbackServices,
+  fallbackChatFlow,
+  fallbackGalleryItems,
+  fallbackInquiries,
+} from "./fallback-data";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -53,6 +60,7 @@ export type GalleryItem = {
 // ─── Public Queries ───────────────────────────────────────────────────────────
 
 export async function getSiteConfig(): Promise<Record<string, string>> {
+  if (!isSupabaseConfigured) return fallbackConfig;
   const { data, error } = await supabase
     .from("site_config")
     .select("key, value");
@@ -61,6 +69,7 @@ export async function getSiteConfig(): Promise<Record<string, string>> {
 }
 
 export async function getServices(): Promise<Service[]> {
+  if (!isSupabaseConfigured) return fallbackServices;
   const { data, error } = await supabase
     .from("services")
     .select("*")
@@ -70,6 +79,7 @@ export async function getServices(): Promise<Service[]> {
 }
 
 export async function getChatFlow(): Promise<ChatStep[]> {
+  if (!isSupabaseConfigured) return fallbackChatFlow;
   const { data, error } = await supabase
     .from("chat_flow")
     .select("*")
@@ -79,6 +89,7 @@ export async function getChatFlow(): Promise<ChatStep[]> {
 }
 
 export async function getGalleryItems(): Promise<GalleryItem[]> {
+  if (!isSupabaseConfigured) return fallbackGalleryItems;
   const { data, error } = await supabase
     .from("gallery_items")
     .select("*")
@@ -90,6 +101,7 @@ export async function getGalleryItems(): Promise<GalleryItem[]> {
 // ─── Inquiry Queries ──────────────────────────────────────────────────────────
 
 export async function getInquiries(): Promise<Inquiry[]> {
+  if (!isSupabaseConfigured) return fallbackInquiries;
   const admin = supabaseAdmin();
   const { data, error } = await admin
     .from("inquiries")
@@ -100,6 +112,7 @@ export async function getInquiries(): Promise<Inquiry[]> {
 }
 
 export async function getInquiry(id: string): Promise<Inquiry | null> {
+  if (!isSupabaseConfigured) return fallbackInquiries.find((i) => i.id === id) ?? null;
   const admin = supabaseAdmin();
   const { data, error } = await admin
     .from("inquiries")
