@@ -3,14 +3,9 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import type { GalleryItem as GalleryItemBase } from "@/lib/queries";
 
-interface GalleryItem {
-  id?: string;
-  title: string;
-  before_image: string;
-  after_image: string;
-  sort_order: number;
-}
+type GalleryItem = Omit<GalleryItemBase, "id"> & { id?: string };
 
 export function GalleryEditor({ initial }: { initial: GalleryItem[] }) {
   const [items, setItems] = useState<GalleryItem[]>(initial);
@@ -18,15 +13,19 @@ export function GalleryEditor({ initial }: { initial: GalleryItem[] }) {
   const [error, setError] = useState<string | null>(null);
 
   async function handleUpload(file: File, index: number, field: "before_image" | "after_image") {
-    const formData = new FormData();
-    formData.append("file", file);
-    const res = await fetch("/api/upload", { method: "POST", body: formData });
-    const data = await res.json();
-    if (data.url) {
-      const updated = [...items];
-      updated[index] = { ...updated[index], [field]: data.url };
-      setItems(updated);
-    }
+    setError(null);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await fetch("/api/upload", { method: "POST", body: formData });
+      const data = await res.json();
+      if (!res.ok) { setError(data.error ?? "Upload fehlgeschlagen."); return; }
+      if (data.url) {
+        const updated = [...items];
+        updated[index] = { ...updated[index], [field]: data.url };
+        setItems(updated);
+      }
+    } catch { setError("Netzwerkfehler beim Upload."); }
   }
 
   function addItem() {

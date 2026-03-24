@@ -4,16 +4,12 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import type { ChatStep as ChatStepBase } from "@/lib/queries";
 
-interface ChatStep {
+type ChatStep = Omit<ChatStepBase, "id" | "options"> & {
   id?: string;
-  step_order: number;
-  question: string;
   options: { label: string; value: string; next_step?: number }[];
-  next_step: number | null;
-  show_upload: boolean;
-  show_calendar: boolean;
-}
+};
 
 export function ChatFlowEditor({ initial }: { initial: ChatStep[] }) {
   const [steps, setSteps] = useState<ChatStep[]>(initial);

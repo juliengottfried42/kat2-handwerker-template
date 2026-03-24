@@ -4,15 +4,9 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import type { Service as ServiceBase } from "@/lib/queries";
 
-interface Service {
-  id?: string;
-  title: string;
-  description: string;
-  icon: string;
-  price_from: number | null;
-  sort_order: number;
-}
+type Service = Omit<ServiceBase, "id"> & { id?: string };
 
 export function ServicesEditor({ initial }: { initial: Service[] }) {
   const [services, setServices] = useState<Service[]>(initial);
