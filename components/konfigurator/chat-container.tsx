@@ -218,7 +218,14 @@ export function ChatContainer({ steps, services }: ChatContainerProps) {
   }
 
   const currentStep = findStep(steps, state.currentStep);
-  const showContactForm = state.currentStep === CONTACT_STEP && !state.isComplete;
+  const isContactStep =
+    state.currentStep === CONTACT_STEP ||
+    (currentStep &&
+      !currentStep.show_upload &&
+      !currentStep.show_calendar &&
+      currentStep.options.length === 0 &&
+      currentStep.next_step === null);
+  const showContactForm = isContactStep && !state.isComplete;
 
   return (
     <div className="max-w-xl mx-auto px-4">
