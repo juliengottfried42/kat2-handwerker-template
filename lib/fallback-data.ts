@@ -34,8 +34,8 @@ export const fallbackChatFlow: ChatStep[] = [
 ];
 
 export const fallbackGalleryItems: GalleryItem[] = [
-  { id: "1", title: "Wohnzimmer Renovation", before_image: "", after_image: "", sort_order: 1 },
-  { id: "2", title: "Fassade Altbau", before_image: "", after_image: "", sort_order: 2 },
+  { id: "1", title: "Wohnzimmer Renovation", before_image: "https://placehold.co/600x400/d4a574/white?text=Vorher", after_image: "https://placehold.co/600x400/8b6914/white?text=Nachher", sort_order: 1 },
+  { id: "2", title: "Fassade Altbau", before_image: "https://placehold.co/600x400/d4a574/white?text=Vorher", after_image: "https://placehold.co/600x400/8b6914/white?text=Nachher", sort_order: 2 },
 ];
 
 export const fallbackInquiries: Inquiry[] = [
