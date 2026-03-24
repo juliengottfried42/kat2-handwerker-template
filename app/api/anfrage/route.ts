@@ -38,6 +38,10 @@ export async function PATCH(req: NextRequest) {
   try {
     const { id, status, notes } = await req.json();
     if (!id) return NextResponse.json({ error: "ID fehlt." }, { status: 400 });
+    const VALID_STATUSES = ["neu", "beantwortet", "erledigt"];
+    if (status && !VALID_STATUSES.includes(status)) {
+      return NextResponse.json({ error: "Ungültiger Status." }, { status: 400 });
+    }
     await updateInquiry(id, { status, notes });
     return NextResponse.json({ success: true });
   } catch (error) {

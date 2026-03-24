@@ -4,15 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-
-interface Inquiry {
-  id: string;
-  name: string;
-  email: string;
-  answers: Record<string, string>;
-  status: string;
-  created_at: string;
-}
+import type { Inquiry } from "@/lib/queries";
 
 const statusColors: Record<string, string> = {
   neu: "bg-blue-100 text-blue-800",
@@ -52,19 +44,25 @@ export function InquiryTable({ inquiries: initial }: { inquiries: Inquiry[] }) {
             </tr>
           </thead>
           <tbody>
-            {filtered.map((inq) => (
-              <tr key={inq.id} className="border-t border-warm-100 hover:bg-warm-50">
-                <td className="px-4 py-3">{new Date(inq.created_at).toLocaleDateString("de-CH")}</td>
-                <td className="px-4 py-3 font-medium">{inq.name}</td>
-                <td className="px-4 py-3">{Object.values(inq.answers)[0] ?? "—"}</td>
-                <td className="px-4 py-3">
-                  <Badge className={statusColors[inq.status]}>{inq.status}</Badge>
-                </td>
-                <td className="px-4 py-3 text-right">
-                  <Link href={`/admin/anfragen/${inq.id}`} className="text-green-600 hover:underline">Details →</Link>
-                </td>
+            {filtered.length === 0 ? (
+              <tr>
+                <td colSpan={5} className="px-4 py-8 text-center text-warm-500">Keine Anfragen</td>
               </tr>
-            ))}
+            ) : (
+              filtered.map((inq) => (
+                <tr key={inq.id} className="border-t border-warm-100 hover:bg-warm-50">
+                  <td className="px-4 py-3">{new Date(inq.created_at).toLocaleDateString("de-CH")}</td>
+                  <td className="px-4 py-3 font-medium">{inq.name}</td>
+                  <td className="px-4 py-3">{Object.values(inq.answers)[0] ?? "—"}</td>
+                  <td className="px-4 py-3">
+                    <Badge className={statusColors[inq.status]}>{inq.status}</Badge>
+                  </td>
+                  <td className="px-4 py-3 text-right">
+                    <Link href={`/admin/anfragen/${inq.id}`} className="text-green-600 hover:underline">Details →</Link>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>

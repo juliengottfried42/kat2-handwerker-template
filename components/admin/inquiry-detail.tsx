@@ -5,35 +5,39 @@ import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-
-interface Inquiry {
-  id: string;
-  name: string;
-  phone: string;
-  email: string;
-  message: string | null;
-  answers: Record<string, string>;
-  photos: string[];
-  preferred_date: string | null;
-  status: string;
-  notes: string | null;
-  created_at: string;
-}
+import type { Inquiry } from "@/lib/queries";
 
 export function InquiryDetail({ inquiry }: { inquiry: Inquiry }) {
   const [status, setStatus] = useState(inquiry.status);
   const [notes, setNotes] = useState(inquiry.notes ?? "");
   const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   async function save() {
     setSaving(true);
-    await fetch(`/api/anfrage`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: inquiry.id, status, notes }),
-    });
-    setSaving(false);
+    setSaved(false);
+    setError(null);
+    try {
+      const res = await fetch(`/api/anfrage`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: inquiry.id, status, notes }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setError(data.error ?? "Speichern fehlgeschlagen.");
+      } else {
+        setSaved(true);
+      }
+    } catch {
+      setError("Netzwerkfehler. Bitte erneut versuchen.");
+    } finally {
+      setSaving(false);
+    }
   }
+
+  const whatsappPhone = inquiry.phone.replace(/[\s\-\(\)]/g, "").replace(/^\+/, "");
 
   return (
     <div className="max-w-2xl space-y-6">
@@ -46,7 +50,7 @@ export function InquiryDetail({ inquiry }: { inquiry: Inquiry }) {
         <h3 className="font-semibold text-warm-800">Kontakt</h3>
         <p><a href={`tel:${inquiry.phone}`} className="text-green-600 hover:underline">📞 {inquiry.phone}</a></p>
         <p><a href={`mailto:${inquiry.email}`} className="text-green-600 hover:underline">✉️ {inquiry.email}</a></p>
-        <p><a href={`https://wa.me/${inquiry.phone.replace(/\s/g, "").replace("+", "")}`} className="text-green-600 hover:underline">💬 WhatsApp</a></p>
+        <p><a href={`https://wa.me/${whatsappPhone}`} className="text-green-600 hover:underline">💬 WhatsApp</a></p>
         {inquiry.preferred_date && <p>📅 Wunschtermin: {inquiry.preferred_date}</p>}
         {inquiry.message && <p>💬 {inquiry.message}</p>}
       </div>
@@ -82,9 +86,13 @@ export function InquiryDetail({ inquiry }: { inquiry: Inquiry }) {
           </SelectContent>
         </Select>
         <Textarea placeholder="Interne Notizen..." value={notes} onChange={(e) => setNotes(e.target.value)} />
-        <Button onClick={save} disabled={saving} className="bg-green-600 hover:bg-green-700">
-          {saving ? "Speichern..." : "Speichern"}
-        </Button>
+        <div className="flex items-center gap-3">
+          <Button onClick={save} disabled={saving} className="bg-green-600 hover:bg-green-700">
+            {saving ? "Speichern..." : "Speichern"}
+          </Button>
+          {saved && <span className="text-sm text-green-600">Gespeichert.</span>}
+          {error && <span className="text-sm text-red-600">{error}</span>}
+        </div>
       </div>
     </div>
   );
