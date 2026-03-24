@@ -15,6 +15,7 @@ interface GalleryItem {
 export function GalleryEditor({ initial }: { initial: GalleryItem[] }) {
   const [items, setItems] = useState<GalleryItem[]>(initial);
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   async function handleUpload(file: File, index: number, field: "before_image" | "after_image") {
     const formData = new FormData();
@@ -34,6 +35,7 @@ export function GalleryEditor({ initial }: { initial: GalleryItem[] }) {
 
   async function save(index: number) {
     setSaving(true);
+    setError(null);
     try {
       const res = await fetch("/api/admin/gallery", {
         method: "POST",
@@ -41,30 +43,37 @@ export function GalleryEditor({ initial }: { initial: GalleryItem[] }) {
         body: JSON.stringify(items[index]),
       });
       const saved = await res.json();
-      if (saved.id) {
-        const updated = [...items];
-        updated[index] = saved;
-        setItems(updated);
-      }
-    } finally {
-      setSaving(false);
-    }
+      if (!res.ok) { setError(saved.error ?? "Speichern fehlgeschlagen."); return; }
+      const updated = [...items];
+      updated[index] = saved;
+      setItems(updated);
+    } catch { setError("Netzwerkfehler."); } finally { setSaving(false); }
   }
 
   async function remove(index: number) {
+    if (!confirm("Wirklich löschen?")) return;
     const item = items[index];
     if (item.id) {
-      await fetch("/api/admin/gallery", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: item.id }),
-      });
+      setError(null);
+      try {
+        const res = await fetch("/api/admin/gallery", {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id: item.id }),
+        });
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          setError(data.error ?? "Löschen fehlgeschlagen.");
+          return;
+        }
+      } catch { setError("Netzwerkfehler."); return; }
     }
     setItems(items.filter((_, i) => i !== index));
   }
 
   return (
     <div className="space-y-4">
+      {error && <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">{error}</p>}
       {items.map((item, i) => (
         <div key={item.id ?? i} className="bg-white border border-warm-100 rounded-xl p-4 space-y-3">
           <div className="flex gap-3">

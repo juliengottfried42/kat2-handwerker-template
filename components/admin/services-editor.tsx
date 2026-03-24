@@ -17,6 +17,7 @@ interface Service {
 export function ServicesEditor({ initial }: { initial: Service[] }) {
   const [services, setServices] = useState<Service[]>(initial);
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   function addService() {
     setServices([...services, { title: "", description: "", icon: "🔧", price_from: null, sort_order: services.length + 1 }]);
@@ -30,6 +31,7 @@ export function ServicesEditor({ initial }: { initial: Service[] }) {
 
   async function save(index: number) {
     setSaving(true);
+    setError(null);
     try {
       const res = await fetch("/api/admin/services", {
         method: "POST",
@@ -37,30 +39,37 @@ export function ServicesEditor({ initial }: { initial: Service[] }) {
         body: JSON.stringify(services[index]),
       });
       const saved = await res.json();
-      if (saved.id) {
-        const updated = [...services];
-        updated[index] = saved;
-        setServices(updated);
-      }
-    } finally {
-      setSaving(false);
-    }
+      if (!res.ok) { setError(saved.error ?? "Speichern fehlgeschlagen."); return; }
+      const updated = [...services];
+      updated[index] = saved;
+      setServices(updated);
+    } catch { setError("Netzwerkfehler."); } finally { setSaving(false); }
   }
 
   async function remove(index: number) {
+    if (!confirm("Wirklich löschen?")) return;
     const svc = services[index];
     if (svc.id) {
-      await fetch("/api/admin/services", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: svc.id }),
-      });
+      setError(null);
+      try {
+        const res = await fetch("/api/admin/services", {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id: svc.id }),
+        });
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          setError(data.error ?? "Löschen fehlgeschlagen.");
+          return;
+        }
+      } catch { setError("Netzwerkfehler."); return; }
     }
     setServices(services.filter((_, i) => i !== index));
   }
 
   return (
     <div className="space-y-4">
+      {error && <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">{error}</p>}
       {services.map((svc, i) => (
         <div key={svc.id ?? i} className="bg-white border border-warm-100 rounded-xl p-4 space-y-3">
           <div className="flex gap-3">

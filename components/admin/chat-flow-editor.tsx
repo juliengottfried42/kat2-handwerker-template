@@ -18,6 +18,7 @@ interface ChatStep {
 export function ChatFlowEditor({ initial }: { initial: ChatStep[] }) {
   const [steps, setSteps] = useState<ChatStep[]>(initial);
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   function updateStep(index: number, field: keyof ChatStep, value: unknown) {
     const updated = [...steps];
@@ -45,8 +46,13 @@ export function ChatFlowEditor({ initial }: { initial: ChatStep[] }) {
     setSteps(updated);
   }
 
+  function addStep() {
+    setSteps([...steps, { step_order: steps.length + 1, question: "", options: [{ label: "", value: "" }], next_step: null, show_upload: false, show_calendar: false }]);
+  }
+
   async function save(index: number) {
     setSaving(true);
+    setError(null);
     try {
       const res = await fetch("/api/admin/chat-flow", {
         method: "POST",
@@ -54,30 +60,37 @@ export function ChatFlowEditor({ initial }: { initial: ChatStep[] }) {
         body: JSON.stringify(steps[index]),
       });
       const saved = await res.json();
-      if (saved.id) {
-        const updated = [...steps];
-        updated[index] = saved;
-        setSteps(updated);
-      }
-    } finally {
-      setSaving(false);
-    }
+      if (!res.ok) { setError(saved.error ?? "Speichern fehlgeschlagen."); return; }
+      const updated = [...steps];
+      updated[index] = saved;
+      setSteps(updated);
+    } catch { setError("Netzwerkfehler."); } finally { setSaving(false); }
   }
 
   async function remove(index: number) {
+    if (!confirm("Wirklich löschen?")) return;
     const step = steps[index];
     if (step.id) {
-      await fetch("/api/admin/chat-flow", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: step.id }),
-      });
+      setError(null);
+      try {
+        const res = await fetch("/api/admin/chat-flow", {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id: step.id }),
+        });
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          setError(data.error ?? "Löschen fehlgeschlagen.");
+          return;
+        }
+      } catch { setError("Netzwerkfehler."); return; }
     }
     setSteps(steps.filter((_, i) => i !== index));
   }
 
   return (
     <div className="space-y-6">
+      {error && <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">{error}</p>}
       {steps.map((step, si) => (
         <div key={step.id ?? si} className="bg-white border border-warm-100 rounded-xl p-4 space-y-3">
           <div className="flex items-center gap-3">
@@ -106,6 +119,7 @@ export function ChatFlowEditor({ initial }: { initial: ChatStep[] }) {
           </div>
         </div>
       ))}
+      <Button onClick={addStep} variant="outline">+ Schritt hinzufügen</Button>
     </div>
   );
 }
