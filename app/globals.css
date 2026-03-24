@@ -4,6 +4,23 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@theme {
+  --color-warm-50: #fdf8f0;
+  --color-warm-100: #f5ead6;
+  --color-warm-200: #e8d5b0;
+  --color-warm-300: #d4b886;
+  --color-warm-400: #c49a5c;
+  --color-warm-500: #a67c3c;
+  --color-warm-600: #8b6330;
+  --color-warm-700: #6b4a24;
+  --color-warm-800: #4a3218;
+  --color-warm-900: #2d1e0e;
+  --color-green-600: #4a7c59;
+  --color-green-700: #3a6347;
+  --font-serif: "DM Serif Display", serif;
+  --font-sans: "Inter", sans-serif;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
