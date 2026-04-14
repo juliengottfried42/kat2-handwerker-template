@@ -26,12 +26,12 @@ export function ChatPhotoUpload({ onUpload, onSkip }: ChatPhotoUploadProps) {
   }
 
   return (
-    <div className="flex flex-wrap gap-2">
-      <input ref={fileRef} type="file" accept="image/*" multiple className="hidden" onChange={(e) => e.target.files && handleFiles(e.target.files)} />
-      <button onClick={() => fileRef.current?.click()} disabled={uploading} className="px-5 py-2.5 bg-white border border-warm-200 rounded-full text-sm font-medium text-warm-700 hover:bg-warm-100 transition-all disabled:opacity-50">
+    <div className="flex flex-wrap gap-2" role="group" aria-label="Foto-Upload Optionen">
+      <input ref={fileRef} type="file" accept="image/*" multiple className="hidden" aria-label="Fotos auswaehlen" onChange={(e) => e.target.files && handleFiles(e.target.files)} />
+      <button onClick={() => fileRef.current?.click()} disabled={uploading} className="px-5 py-2.5 bg-white border border-warm-200 rounded-full text-sm font-medium text-warm-700 hover:bg-warm-100 transition-all disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600" aria-label={uploading ? "Fotos werden hochgeladen" : "Fotos hochladen"}>
         {uploading ? "Wird hochgeladen..." : "📷 Fotos hochladen"}
       </button>
-      <button onClick={onSkip} disabled={uploading} className="px-5 py-2.5 bg-white border border-warm-200 rounded-full text-sm font-medium text-warm-700 hover:bg-warm-100 transition-all disabled:opacity-50">
+      <button onClick={onSkip} disabled={uploading} className="px-5 py-2.5 bg-white border border-warm-200 rounded-full text-sm font-medium text-warm-700 hover:bg-warm-100 transition-all disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600" aria-label="Foto-Upload ueberspringen">
         Überspringen
       </button>
     </div>

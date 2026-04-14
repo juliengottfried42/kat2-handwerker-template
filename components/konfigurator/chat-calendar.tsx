@@ -14,7 +14,7 @@ export function ChatCalendar({ onSelect }: ChatCalendarProps) {
   return (
     <div>
       <Calendar mode="single" selected={date} onSelect={setDate} disabled={{ before: new Date() }} className="rounded-xl border border-warm-200 bg-white" />
-      <Button onClick={() => date && onSelect(date.toISOString().split("T")[0])} disabled={!date} className="mt-3 bg-green-600 hover:bg-green-700">
+      <Button onClick={() => date && onSelect(date.toISOString().split("T")[0])} disabled={!date} className="mt-3 bg-green-600 hover:bg-green-700" aria-label={date ? `Termin am ${date.toLocaleDateString("de-CH")} bestaetigen` : "Bitte zuerst ein Datum waehlen"}>
         Termin bestätigen
       </Button>
     </div>

@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { upsertGalleryItem, deleteGalleryItem } from "@/lib/queries";
+import { requireAdminApi } from "@/lib/admin-auth";
 
 export async function POST(req: NextRequest) {
+  const authError = await requireAdminApi();
+  if (authError) return authError;
+
   try {
     const body = await req.json();
     const item = await upsertGalleryItem(body);
@@ -13,6 +17,9 @@ export async function POST(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
+  const authError = await requireAdminApi();
+  if (authError) return authError;
+
   try {
     const { id } = await req.json();
     await deleteGalleryItem(id);

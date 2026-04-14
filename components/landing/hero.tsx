@@ -21,7 +21,8 @@ export function Hero({ title, subtitle }: HeroProps) {
         </p>
         <Link
           href="/konfigurator"
-          className="inline-block bg-green-600 hover:bg-green-700 text-white px-9 py-4 rounded-xl text-base font-semibold transition-all hover:-translate-y-0.5 hover:shadow-lg"
+          className="inline-block bg-green-600 hover:bg-green-700 text-white px-9 py-4 rounded-xl text-base font-semibold transition-all hover:-translate-y-0.5 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-green-400"
+          aria-label="Kostenlose Anfrage starten"
         >
           Kostenlose Anfrage starten →
         </Link>

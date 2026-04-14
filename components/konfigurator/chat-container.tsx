@@ -231,7 +231,7 @@ export function ChatContainer({ steps, services }: ChatContainerProps) {
     <div className="max-w-xl mx-auto px-4">
       <div className="bg-warm-50 rounded-2xl p-4 min-h-[400px] flex flex-col gap-4">
         {/* Messages */}
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3" aria-live="polite" aria-relevant="additions">
           {state.messages.map((msg) => (
             <ChatMessageBubble key={msg.id} type={msg.type} text={msg.text} />
           ))}

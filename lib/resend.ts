@@ -3,7 +3,16 @@ import { render } from "@react-email/render";
 import InquiryConfirmation from "@/emails/inquiry-confirmation";
 import InquiryNotification from "@/emails/inquiry-notification";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+let _resend: Resend | null = null;
+function getResend() {
+  if (!_resend) {
+    if (!process.env.RESEND_API_KEY) {
+      throw new Error("RESEND_API_KEY is not configured");
+    }
+    _resend = new Resend(process.env.RESEND_API_KEY);
+  }
+  return _resend;
+}
 
 export async function sendInquiryConfirmation(to: string, data: {
   name: string;
@@ -19,7 +28,7 @@ export async function sendInquiryConfirmation(to: string, data: {
   const html = await render(component);
   const text = await render(component, { plainText: true });
 
-  const { error } = await resend.emails.send({
+  const { error } = await getResend().emails.send({
     from: `Anfrage <${process.env.FROM_EMAIL ?? "noreply@example.com"}>`,
     to,
     subject: "Ihre Anfrage ist eingegangen",
@@ -54,7 +63,7 @@ export async function sendInquiryNotification(data: {
   const html = await render(component);
   const text = await render(component, { plainText: true });
 
-  const { error } = await resend.emails.send({
+  const { error } = await getResend().emails.send({
     from: `Website <${process.env.FROM_EMAIL ?? "noreply@example.com"}>`,
     to: recipientEmail,
     subject: `Neue Anfrage von ${data.name}`,

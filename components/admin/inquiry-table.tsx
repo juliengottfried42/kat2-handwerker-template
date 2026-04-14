@@ -19,7 +19,7 @@ export function InquiryTable({ inquiries: initial }: { inquiries: Inquiry[] }) {
   return (
     <div>
       <div className="mb-4 flex items-center gap-4">
-        <Select value={filter} onValueChange={(v) => { if (v !== null) setFilter(v); }}>
+        <Select value={filter} onValueChange={(v) => { if (v !== null) setFilter(v); }} aria-label="Anfragen nach Status filtern">
           <SelectTrigger className="w-48 bg-white">
             <SelectValue />
           </SelectTrigger>

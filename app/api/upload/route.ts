@@ -1,7 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase";
+import { requireAdminApi } from "@/lib/admin-auth";
+
+const ALLOWED_MIME_TYPES = new Set([
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/avif",
+  "image/gif",
+  "image/svg+xml",
+]);
 
 export async function POST(req: NextRequest) {
+  // Security: require admin authentication for file uploads
+  const authError = await requireAdminApi();
+  if (authError) return authError;
+
   try {
     const formData = await req.formData();
     const file = formData.get("file") as File | null;
@@ -12,6 +26,14 @@ export async function POST(req: NextRequest) {
 
     if (file.size > 5 * 1024 * 1024) {
       return NextResponse.json({ error: "Datei zu gross (max. 5 MB)." }, { status: 400 });
+    }
+
+    // Security: validate file type to prevent uploading executable/malicious files
+    if (!ALLOWED_MIME_TYPES.has(file.type)) {
+      return NextResponse.json(
+        { error: "Dateityp nicht erlaubt. Nur Bilder (JPEG, PNG, WebP, AVIF, GIF, SVG)." },
+        { status: 400 }
+      );
     }
 
     const ext = file.name.split(".").pop();
