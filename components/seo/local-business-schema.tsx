@@ -59,13 +59,7 @@ export function LocalBusinessSchema({
 }: SchemaProps) {
   const preset = getActivePreset();
 
-  const businessTypeMap: Record<string, string> = {
-    elektriker: "Electrician",
-    sanitaer: "Plumber",
-    maler: "HousePainter",
-    schreiner: "GeneralContractor",
-  };
-  const businessType = businessTypeMap[preset.key] ?? "HomeAndConstructionBusiness";
+  const businessType = preset.schemaType;
 
   const postalAddress = parseAddress(address);
   const openings = parseOpeningHours(openingHours);

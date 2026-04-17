@@ -12,6 +12,8 @@ export interface BranchePreset {
   chatFlow: Omit<ChatStep, "id">[];
   ctaHeadline: string;
   howItWorksLabels: [string, string, string];
+  emergency24h: boolean;
+  schemaType: "Electrician" | "Plumber" | "HousePainter" | "GeneralContractor";
 }
 
 const CONTACT_STEP_NEXT = null;
@@ -79,6 +81,8 @@ export const branchePresets: Record<BrancheKey, BranchePreset> = {
     ],
     ctaHeadline: "Strom-Problem? Wir helfen schnell.",
     howItWorksLabels: ["Anfrage senden", "Offerte innert 24h", "Sauber erledigt"],
+    emergency24h: true,
+    schemaType: "Electrician",
   },
 
   sanitaer: {
@@ -144,6 +148,8 @@ export const branchePresets: Record<BrancheKey, BranchePreset> = {
     ],
     ctaHeadline: "Wasserschaden? Wir sind schnell vor Ort.",
     howItWorksLabels: ["Anfrage senden", "Schnelle Rueckmeldung", "Problem geloest"],
+    emergency24h: true,
+    schemaType: "Plumber",
   },
 
   maler: {
@@ -208,6 +214,8 @@ export const branchePresets: Record<BrancheKey, BranchePreset> = {
     ],
     ctaHeadline: "Bereit fuer frische Farbe?",
     howItWorksLabels: ["Anfrage stellen", "Offerte erhalten", "Auftrag erledigt"],
+    emergency24h: false,
+    schemaType: "HousePainter",
   },
 
   schreiner: {
@@ -274,6 +282,8 @@ export const branchePresets: Record<BrancheKey, BranchePreset> = {
     ],
     ctaHeadline: "Neue Kueche geplant?",
     howItWorksLabels: ["Anfrage senden", "Beratungstermin", "Massanfertigung"],
+    emergency24h: false,
+    schemaType: "GeneralContractor",
   },
 };
 
