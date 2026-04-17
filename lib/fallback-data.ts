@@ -1,41 +1,64 @@
 import type { Service, ChatStep, GalleryItem, Inquiry } from "./queries";
+import { getActivePreset } from "./config";
+
+const preset = getActivePreset();
 
 export const fallbackConfig: Record<string, string> = {
-  hero_title: "Ihr Maler in Zürich und Umgebung",
-  hero_subtitle:
-    "Professionelle Malerarbeiten mit Herzblut. Von der Wohnungsrenovation bis zur Fassadengestaltung.",
-  company_name: "Malermeister Brunner",
+  hero_title: preset.hero.title,
+  hero_subtitle: preset.hero.subtitle,
+  hero_badge: preset.hero.badge,
+  company_name: `${preset.label} Musterbetrieb`,
   phone: "076 123 45 67",
-  email: "info@maler-brunner.ch",
+  email: `info@${preset.key}-musterbetrieb.ch`,
   whatsapp: "41761234567",
-  about_title: "Malermeister mit Leidenschaft",
+  address: "Musterstrasse 1, 8000 Zuerich",
+  owner_name: "Max Muster",
+  service_area: "Zuerich, Winterthur, Zug und Umgebung",
+  service_radius_km: "30",
+  latitude: "47.3769",
+  longitude: "8.5417",
+  about_title: preset.aboutTitle,
   about_text:
-    "Seit 2008 verschönern wir Zürich — Wohnung für Wohnung, Fassade für Fassade. Als Familienbetrieb stehen wir für persönliche Betreuung und handwerkliche Qualität.",
+    "Seit Jahren stehen wir fuer persoenliche Betreuung und handwerkliche Qualitaet. Regional verankert, pragmatisch, zuverlaessig.",
   about_years: "15+",
   about_projects: "800+",
+  opening_hours: "Mo-Fr 07:30-17:30, Sa 09:00-12:00",
+  cta_headline: preset.ctaHeadline,
   google_reviews_cache: "{}",
 };
 
-export const fallbackServices: Service[] = [
-  { id: "1", title: "Innenanstrich", description: "Wände, Decken, Türen und Fensterrahmen — frische Farbe für Ihr Zuhause.", icon: "🎨", price_from: 800, sort_order: 1 },
-  { id: "2", title: "Fassadengestaltung", description: "Wetterfeste Anstriche und kreative Fassadengestaltung.", icon: "🏠", price_from: 3500, sort_order: 2 },
-  { id: "3", title: "Tapezierarbeiten", description: "Von klassisch bis modern — wir tapezieren mit Präzision.", icon: "✨", price_from: 600, sort_order: 3 },
-  { id: "4", title: "Spachtelarbeiten", description: "Glatte Wände, perfekte Oberflächen.", icon: "🔨", price_from: 500, sort_order: 4 },
-  { id: "5", title: "Holzschutz", description: "Lasuren, Lacke und Öle für Ihre Holzflächen.", icon: "🪵", price_from: 400, sort_order: 5 },
-  { id: "6", title: "Gewerbe & Büro", description: "Professionelle Malerarbeiten für Geschäftsräume.", icon: "🏢", price_from: null, sort_order: 6 },
-];
+export const fallbackServices: Service[] = preset.services.map((s, idx) => ({
+  id: `svc-${idx + 1}`,
+  ...s,
+}));
 
-export const fallbackChatFlow: ChatStep[] = [
-  { id: "1", step_order: 1, question: "Hallo! Was können wir für Sie tun?", options: [{ label: "Innenanstrich", value: "innenanstrich" }, { label: "Fassade", value: "fassade" }, { label: "Tapezieren", value: "tapezieren" }, { label: "Anderes", value: "anderes" }], next_step: 2, show_upload: false, show_calendar: false },
-  { id: "2", step_order: 2, question: "Wie gross ist die Fläche ungefähr?", options: [{ label: "1-2 Zimmer", value: "1-2" }, { label: "3-4 Zimmer", value: "3-4" }, { label: "5+ Zimmer", value: "5+" }, { label: "Weiss ich nicht", value: "unbekannt" }], next_step: 3, show_upload: false, show_calendar: false },
-  { id: "3", step_order: 3, question: "Haben Sie Fotos? Das hilft uns bei der Einschätzung.", options: [{ label: "Fotos hochladen", value: "upload" }, { label: "Überspringen", value: "skip" }], next_step: 4, show_upload: true, show_calendar: false },
-  { id: "4", step_order: 4, question: "Wann soll's losgehen?", options: [], next_step: 5, show_upload: false, show_calendar: true },
-  { id: "5", step_order: 5, question: "Fast geschafft! Wie erreichen wir Sie?", options: [], next_step: null, show_upload: false, show_calendar: false },
-];
+export const fallbackChatFlow: ChatStep[] = preset.chatFlow.map((s, idx) => ({
+  id: `step-${idx + 1}`,
+  ...s,
+}));
 
 export const fallbackGalleryItems: GalleryItem[] = [
-  { id: "1", title: "Wohnzimmer Renovation", before_image: "https://placehold.co/600x400/d4a574/white?text=Vorher", after_image: "https://placehold.co/600x400/8b6914/white?text=Nachher", sort_order: 1 },
-  { id: "2", title: "Fassade Altbau", before_image: "https://placehold.co/600x400/d4a574/white?text=Vorher", after_image: "https://placehold.co/600x400/8b6914/white?text=Nachher", sort_order: 2 },
+  {
+    id: "1",
+    title: "Projekt 1",
+    before_image: "https://placehold.co/800x600/d4a574/ffffff?text=Vorher",
+    after_image: "https://placehold.co/800x600/4a7c59/ffffff?text=Nachher",
+    sort_order: 1,
+  },
+  {
+    id: "2",
+    title: "Projekt 2",
+    before_image: "https://placehold.co/800x600/d4a574/ffffff?text=Vorher",
+    after_image: "https://placehold.co/800x600/4a7c59/ffffff?text=Nachher",
+    sort_order: 2,
+  },
+  {
+    id: "3",
+    title: "Projekt 3",
+    before_image: "https://placehold.co/800x600/d4a574/ffffff?text=Vorher",
+    after_image: "https://placehold.co/800x600/4a7c59/ffffff?text=Nachher",
+    sort_order: 3,
+  },
 ];
 
 export const fallbackInquiries: Inquiry[] = [
@@ -44,10 +67,14 @@ export const fallbackInquiries: Inquiry[] = [
     name: "Max Muster",
     phone: "+41 79 123 45 67",
     email: "max@example.ch",
-    message: "Möchte gerne ein Angebot für 3 Zimmer.",
-    answers: { "Was können wir für Sie tun?": "Innenanstrich", "Wie gross ist die Fläche?": "3-4 Zimmer" },
+    message: "Moechte gerne eine Offerte.",
+    answers: preset.chatFlow.slice(0, 2).reduce<Record<string, string>>((acc, step) => {
+      const firstLabel = step.options[0]?.label ?? "—";
+      acc[step.question] = firstLabel;
+      return acc;
+    }, {}),
     photos: [],
-    preferred_date: "2026-04-15",
+    preferred_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
     status: "neu",
     notes: null,
     created_at: new Date().toISOString(),

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase";
-import { requireAdminApi } from "@/lib/admin-auth";
+import { supabaseAdmin, isSupabaseConfigured } from "@/lib/supabase";
 
 const ALLOWED_MIME_TYPES = new Set([
   "image/jpeg",
@@ -8,49 +7,76 @@ const ALLOWED_MIME_TYPES = new Set([
   "image/webp",
   "image/avif",
   "image/gif",
-  "image/svg+xml",
 ]);
 
-export async function POST(req: NextRequest) {
-  // Security: require admin authentication for file uploads
-  const authError = await requireAdminApi();
-  if (authError) return authError;
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
+const rateLimit = new Map<string, { count: number; resetAt: number }>();
+
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const entry = rateLimit.get(ip);
+  if (!entry || now > entry.resetAt) {
+    rateLimit.set(ip, { count: 1, resetAt: now + 60_000 });
+    return true;
+  }
+  if (entry.count >= 15) return false;
+  entry.count++;
+  return true;
+}
+
+export async function POST(req: NextRequest) {
   try {
+    const ip = req.headers.get("x-forwarded-for")?.split(",")[0] || "unknown";
+    if (!checkRateLimit(ip)) {
+      return NextResponse.json(
+        { error: "Zu viele Uploads. Bitte einen Moment warten." },
+        { status: 429 }
+      );
+    }
+
+    if (!isSupabaseConfigured) {
+      return NextResponse.json(
+        { error: "Upload ist im Demo-Modus nicht verfuegbar. Bitte Supabase konfigurieren." },
+        { status: 503 }
+      );
+    }
+
     const formData = await req.formData();
     const file = formData.get("file") as File | null;
+    const bucketParam = formData.get("bucket");
+    const bucket = bucketParam === "gallery" || bucketParam === "assets" ? bucketParam : "photos";
 
     if (!file) {
       return NextResponse.json({ error: "Keine Datei hochgeladen." }, { status: 400 });
     }
 
-    if (file.size > 5 * 1024 * 1024) {
+    if (file.size > MAX_FILE_SIZE) {
       return NextResponse.json({ error: "Datei zu gross (max. 5 MB)." }, { status: 400 });
     }
 
-    // Security: validate file type to prevent uploading executable/malicious files
     if (!ALLOWED_MIME_TYPES.has(file.type)) {
       return NextResponse.json(
-        { error: "Dateityp nicht erlaubt. Nur Bilder (JPEG, PNG, WebP, AVIF, GIF, SVG)." },
+        { error: "Dateityp nicht erlaubt. Nur JPEG, PNG, WebP, AVIF oder GIF." },
         { status: 400 }
       );
     }
 
-    const ext = file.name.split(".").pop();
+    const ext = (file.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g, "");
     const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
 
     const buffer = Buffer.from(await file.arrayBuffer());
 
     const { error } = await supabaseAdmin()
       .storage
-      .from("photos")
-      .upload(fileName, buffer, { contentType: file.type });
+      .from(bucket)
+      .upload(fileName, buffer, { contentType: file.type, cacheControl: "31536000" });
 
     if (error) throw error;
 
     const { data } = supabaseAdmin()
       .storage
-      .from("photos")
+      .from(bucket)
       .getPublicUrl(fileName);
 
     return NextResponse.json({ url: data.publicUrl });

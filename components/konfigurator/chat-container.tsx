@@ -97,7 +97,7 @@ export function ChatContainer({ steps, services }: ChatContainerProps) {
 
     setState((s) => ({
       ...s,
-      answers: { ...s.answers, [currentStep.id]: label },
+      answers: { ...s.answers, [currentStep.question]: label },
       messages: [...s.messages, createUserMessage(label)],
     }));
 
