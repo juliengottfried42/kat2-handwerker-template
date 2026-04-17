@@ -18,11 +18,14 @@ export function Hero({ title, subtitle, badge, phone, heroImage }: HeroProps) {
       aria-labelledby="hero-heading"
     >
       {heroImage && (
-        <div
-          className="absolute inset-0 bg-cover bg-center opacity-25"
-          style={{ backgroundImage: `url(${heroImage})` }}
-          aria-hidden="true"
-        />
+        <>
+          <link rel="preload" as="image" href={heroImage} fetchPriority="high" />
+          <div
+            className="absolute inset-0 bg-cover bg-center opacity-25"
+            style={{ backgroundImage: `url(${heroImage})` }}
+            aria-hidden="true"
+          />
+        </>
       )}
       <div className="absolute inset-0 bg-gradient-to-t from-warm-900/80 via-warm-900/40 to-transparent" aria-hidden="true" />
 
