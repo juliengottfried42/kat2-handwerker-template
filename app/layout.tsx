@@ -28,6 +28,17 @@ export async function generateMetadata(): Promise<Metadata> {
     config.hero_subtitle ??
     preset.hero.subtitle;
 
+  const ogImage = config.og_image ?? config.hero_image;
+  const serviceArea = config.service_area;
+  const keywords = [
+    preset.label,
+    "Handwerker",
+    "Offerte",
+    "Schweiz",
+    ...preset.services.map((s) => s.title),
+    ...(serviceArea ? serviceArea.split(/[,;]/).map((s) => s.trim()).filter(Boolean) : []),
+  ];
+
   return {
     metadataBase: new URL(businessDefaults.siteUrl),
     title: {
@@ -39,13 +50,17 @@ export async function generateMetadata(): Promise<Metadata> {
     authors: [{ name: companyName }],
     generator: "Next.js",
     referrer: "strict-origin-when-cross-origin",
-    keywords: [
-      preset.label,
-      "Handwerker",
-      "Offerte",
-      "Schweiz",
-      ...preset.services.map((s) => s.title),
-    ],
+    keywords,
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
+    },
     openGraph: {
       type: "website",
       locale: businessDefaults.locale,
@@ -53,11 +68,13 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: companyName,
       title,
       description,
+      images: ogImage ? [{ url: ogImage, width: 1200, height: 630, alt: companyName }] : undefined,
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
+      images: ogImage ? [ogImage] : undefined,
     },
     alternates: {
       canonical: businessDefaults.siteUrl,
