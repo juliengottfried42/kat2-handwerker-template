@@ -39,6 +39,7 @@ export default async function Home() {
         badge={config.hero_badge ?? preset.hero.badge}
         phone={config.phone}
         heroImage={config.hero_image}
+        emergency24h={preset.emergency24h}
       />
       <Services services={services} />
       <HowItWorks labels={preset.howItWorksLabels} />

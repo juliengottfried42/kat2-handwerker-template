@@ -7,9 +7,10 @@ interface HeroProps {
   badge?: string;
   phone?: string;
   heroImage?: string;
+  emergency24h?: boolean;
 }
 
-export function Hero({ title, subtitle, badge, phone, heroImage }: HeroProps) {
+export function Hero({ title, subtitle, badge, phone, heroImage, emergency24h }: HeroProps) {
   const telHref = phone ? `tel:${phone.replace(/[^+0-9]/g, "")}` : null;
 
   return (
@@ -30,11 +31,19 @@ export function Hero({ title, subtitle, badge, phone, heroImage }: HeroProps) {
       <div className="absolute inset-0 bg-gradient-to-t from-warm-900/80 via-warm-900/40 to-transparent" aria-hidden="true" />
 
       <div className="relative px-5 md:px-12 pt-24 pb-16 md:py-20 max-w-3xl mx-auto md:mx-0 w-full">
-        {badge && (
+        {emergency24h && telHref ? (
+          <a
+            href={telHref}
+            className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 px-4 py-2 rounded-full text-xs md:text-sm text-white font-semibold mb-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-400"
+            aria-label={`Notdienst 24h anrufen: ${phone}`}
+          >
+            <span aria-hidden="true" className="animate-pulse">🚨</span> 24h Notdienst — Jetzt anrufen
+          </a>
+        ) : badge ? (
           <div className="inline-flex items-center gap-2 bg-white/15 px-4 py-2 rounded-full text-xs md:text-sm text-warm-100 backdrop-blur-sm mb-5">
             <span aria-hidden="true">⭐</span> {badge}
           </div>
-        )}
+        ) : null}
         <h1
           id="hero-heading"
           className="font-serif text-4xl sm:text-5xl md:text-6xl text-warm-100 leading-tight mb-4"
