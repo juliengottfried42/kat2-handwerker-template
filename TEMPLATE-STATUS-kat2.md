@@ -48,3 +48,27 @@ Iterationen folgen unten.
 ### Verification
 - `npx tsc --noEmit`: 0 Fehler
 
+---
+
+## Iteration 2 — SEO, Mobile-Navigation, prominenter Anrufen-CTA
+
+**Score:** 82/100
+
+### Done
+- `components/seo/local-business-schema.tsx` mit JSON-LD Schema (Electrician/Plumber/HousePainter/GeneralContractor), AreaServed als GeoCircle oder City-Liste, AggregateRating (wenn Reviews da), OfferCatalog mit allen Services
+- XSS-sicher: JSON-LD escaped `<`, `>`, `&`, U+2028, U+2029
+- Root-Layout: `generateMetadata` mit Title-Template, OpenGraph, Twitter Cards, Keywords, Locale `de-CH`, metadataBase
+- Viewport-Export separat (Next.js 16 best practice) mit maximumScale=5, themeColor light/dark
+- Public-Layout: Skip-Link verbessert, Logo in sticky Nav mit Backdrop-Blur, Desktop-Nav mit prominenter Telefonnummer und Konfigurator-Button, Mobile-Nav-Komponente (Burger → Full-Screen Drawer)
+- `MobileNav`: Body-Scroll-Lock, 48px Touch-Targets, Safe-Area-Inset unten
+- `MobileCTABar`: Sticky Bottom-Bar (Anrufen | WhatsApp | Anfragen), 60px min-height, `env(safe-area-inset-bottom)`
+- Hero: Badge konfigurierbar, Dual-CTA (Anfrage + tel:), Vorteils-Liste, Backdrop-Overlay fuer optionales Hero-Image
+- About: `next/image` vermieden (Remote-Image ohne Config), semantische `<dl>/<dt>/<dd>` Stats
+- HowItWorks: semantische `<ol>`, Branchen-Labels
+- Footer: drei Spalten mit Kontakt, zweimal sticky keyword, tel:/mailto:
+- Sitemap + robots.ts nutzen `businessDefaults.siteUrl`, `public/robots.txt` entfernt (war doppelt)
+
+### Verification
+- `npm run build`: pass (Next 16.2.1, 21 Routes)
+
+

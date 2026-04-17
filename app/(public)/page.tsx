@@ -7,12 +7,14 @@ import { Reviews } from "@/components/landing/reviews";
 import { About } from "@/components/landing/about";
 import { CTA } from "@/components/landing/cta";
 import { Footer } from "@/components/landing/footer";
-import { WhatsAppButton } from "@/components/whatsapp-button";
+import { MobileCTABar } from "@/components/landing/mobile-cta-bar";
+import { getActivePreset } from "@/lib/config";
 
 export default async function Home() {
   const config = await getSiteConfig();
   const services = await getServices();
   const galleryItems = await getGalleryItems();
+  const preset = getActivePreset();
 
   let reviews: { author_name: string; rating: number; text: string }[] = [];
   let averageRating = 5;
@@ -21,33 +23,46 @@ export default async function Home() {
     const cache = JSON.parse(config.google_reviews_cache ?? "null");
     if (cache && Array.isArray(cache.reviews)) {
       reviews = cache.reviews;
-      averageRating = cache.averageRating ?? 5;
-      totalReviews = cache.totalReviews ?? reviews.length;
+      averageRating = cache.rating ?? cache.averageRating ?? 5;
+      totalReviews = cache.total ?? cache.totalReviews ?? reviews.length;
     }
   } catch {
-    // fallback: empty reviews
+    // ignore
   }
 
   return (
     <main>
       <Hero
-        title={config.hero_title}
-        subtitle={config.hero_subtitle}
-        companyName={config.company_name}
+        title={config.hero_title ?? preset.hero.title}
+        subtitle={config.hero_subtitle ?? preset.hero.subtitle}
+        companyName={config.company_name ?? preset.label}
+        badge={config.hero_badge ?? preset.hero.badge}
+        phone={config.phone}
+        heroImage={config.hero_image}
       />
       <Services services={services} />
-      <HowItWorks />
+      <HowItWorks labels={preset.howItWorksLabels} />
       <Gallery items={galleryItems} />
       <Reviews reviews={reviews} averageRating={averageRating} totalReviews={totalReviews} />
       <About
-        title={config.about_title ?? config.company_name}
+        title={config.about_title ?? config.company_name ?? preset.aboutTitle}
         text={config.about_text ?? ""}
         years={config.about_years ?? "10+"}
         projects={config.about_projects ?? "200+"}
+        photo={config.about_photo}
       />
-      <CTA phone={config.phone ?? ""} email={config.email ?? ""} />
-      <Footer companyName={config.company_name} />
-      <WhatsAppButton number={config.whatsapp} />
+      <CTA
+        phone={config.phone ?? ""}
+        email={config.email ?? ""}
+        headline={config.cta_headline ?? preset.ctaHeadline}
+      />
+      <Footer
+        companyName={config.company_name ?? preset.label}
+        phone={config.phone}
+        email={config.email}
+        address={config.address}
+      />
+      <MobileCTABar phone={config.phone ?? ""} whatsapp={config.whatsapp} />
     </main>
   );
 }
