@@ -1,8 +1,12 @@
 import { NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseAdmin, isSupabaseConfigured } from "@/lib/supabase";
 
 export async function GET() {
   try {
+    if (!isSupabaseConfigured) {
+      return NextResponse.json({ reviews: [], rating: 0, total: 0, demo: true });
+    }
+
     const { data: cached } = await supabaseAdmin()
       .from("site_config")
       .select("value")

@@ -19,11 +19,12 @@ import { ChatContactForm } from "./chat-contact-form";
 interface ChatContainerProps {
   steps: ChatStep[];
   services: { title: string; price_from: number | null }[];
+  isDemo?: boolean;
 }
 
 const CONTACT_STEP = 9999;
 
-export function ChatContainer({ steps, services }: ChatContainerProps) {
+export function ChatContainer({ steps, services, isDemo = false }: ChatContainerProps) {
   const [state, setState] = useState<ChatState>(getInitialState);
   const [submitting, setSubmitting] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -168,6 +169,22 @@ export function ChatContainer({ steps, services }: ChatContainerProps) {
     message?: string;
   }) {
     setSubmitting(true);
+    if (isDemo) {
+      setTimeout(() => {
+        setState((s) => ({
+          ...s,
+          isComplete: true,
+          messages: [
+            ...s.messages,
+            createBotMessage(
+              "Demo-Modus: Ihre Anfrage waere jetzt verschickt worden. In der Produktion erhalten Sie eine Bestaetigung per E-Mail."
+            ),
+          ],
+        }));
+        setSubmitting(false);
+      }, 600);
+      return;
+    }
     try {
       const res = await fetch("/api/anfrage", {
         method: "POST",
